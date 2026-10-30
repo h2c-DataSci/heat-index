@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Heat Index — PAGASA bands and DOLE workplace controls</title>
+  <meta name="description" content="Heat index calculator for Philippine workplaces. Temperature and relative humidity, shade or direct sun, DOST-PAGASA classification, and DOLE Labor Advisory No. 08-23 controls." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,560;9..144,640&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f3eee4;
+      --ink: #1c1612;
+      --muted: #6d6258;
+      --line: #e3d6c4;
+      --card: #fffaf3;
+      --ember: #c4491d;
+      --safe: #16a34a;
+      --caution: #eab308;
+      --extreme: #f97316;
+      --danger: #ef4444;
+      --critical: #991b1b;
+    }
+    * { box-sizing: border-box; }
+    html { -webkit-font-smoothing: antialiased; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: Outfit, ui-sans-serif, system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+      border-top: 4px solid var(--ember);
+    }
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; }
+    :focus-visible {
+      outline: 2px solid var(--ink);
+      outline-offset: 3px;
+    }
+    .wrap {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+    .mast {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      align-items: flex-end;
+      padding-bottom: 22px;
+      margin-bottom: 22px;
+      border-bottom: 1px solid var(--line);
+    }
+    .kicker, .file, .eyebrow {
+      margin: 0;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    h1 {
+      margin: 6px 0 8px;
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 640;
+      font-size: clamp(2.6rem, 5vw, 4.2rem);
+      letter-spacing: -0.035em;
+      line-height: 0.9;
+    }
+    .lede { margin: 0; max-width: 46rem; color: var(--muted); }
+    .file { text-align: right; }
+    .file strong { display: block; color: var(--ink); letter-spacing: 0.08em; font-size: 0.95rem; }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 18px;
+      align-items: start;
+    }
+    .sheet {
+      background: var(--card);
+      border: 1px solid var(--line);
+      padding: 18px 18px 20px;
+    }
+    .block + .block { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+    .eyebrow { margin-bottom: 12px; }
+    .fields { display: grid; gap: 16px; }
+    .field label, .rh-head span { display: block; font-weight: 600; margin-bottom: 6px; }
+    .temp-row, .rh-row, .seg { display: flex; gap: 8px; align-items: stretch; }
+    .temp-row input, .rh-row input[type="text"] {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--ink);
+      border-radius: 0;
+      padding: 6px 0 8px;
+      font-family: Fraunces, Georgia, serif;
+      font-size: 2.4rem;
+      font-weight: 560;
+      letter-spacing: -0.03em;
+      line-height: 1;
+    }
+    .rh-row input[type="text"] { font-size: 1.7rem; max-width: 5.2rem; flex: 0 0 5.2rem; }
+    .seg { background: #f6f0e6; padding: 3px; }
+    .seg button {
+      border: 0;
+      background: transparent;
+      min-height: 44px;
+      padding: 0 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .seg button[aria-pressed="true"] {
+      background: var(--ink);
+      color: #fffaf3;
+    }
+    .hint, .fine, .legal { color: var(--muted); }
+    .hint, .fine { margin: 8px 0 0; font-size: 0.92rem; }
+    .rh-head { display: flex; justify-content: space-between; align-items: baseline; }
+    .slider { margin-top: 12px; }
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--ink) var(--fill, 70%), var(--line) var(--fill, 70%));
+      border-radius: 0;
+    }
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 3px solid var(--card);
+      box-shadow: 0 0 0 1px var(--ink);
+    }
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--ink);
+      border: 3px solid var(--card);
+    }
+    .reading { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; }
+    .hi {
+      margin: 0;
+      font-family: Fraunces, Georgia, serif;
+      font-weight: 560;
+      font-size: clamp(4.4rem, 9vw, 6.4rem);
+      letter-spacing: -0.045em;
+      line-height: 0.82;
+      font-variation-settings: "opsz" 144, "SOFT" 30;
+    }
+    .hi small {
+      font-size: 0.34em;
+      letter-spacing: 0;
+      margin-left: 0.08em;
+    }
+    .band {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin: 10px 0 0;
+      font-weight: 600;
+    }
+    .swatch {
+      width: 12px;
+      height: 12px;
+      flex: none;
+      background: var(--band, var(--safe));
+    }
+    .effect { margin: 8px 0 0; max-width: 38rem; }
+    .pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 16px;
+    }
+    .pair article {
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      min-width: 0;
+    }
+    .pair article.on { border-color: var(--ink); }
+    .pair h3 { margin: 0; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+    .pair p { margin: 4px 0 0; font-family: Fraunces, Georgia, serif; font-size: 1.45rem; letter-spacing: -0.03em; }
+    .pair span { display: block; margin-top: 2px; color: var(--muted); font-family: Outfit, sans-serif; font-size: 0.85rem; letter-spacing: 0; }
+    .delta {
+      margin: 12px 0 0;
+      padding-left: 10px;
+      border-left: 3px solid var(--ember);
+    }
+    .rule {
+      position: relative;
+      height: 14px;
+      margin-top: 16px;
+      background: linear-gradient(90deg,
+        #16a34a 0 8.333%,
+        #eab308 8.333% 25%,
+        #f97316 25% 50%,
+        #ef4444 50% 77.778%,
+        #991b1b 77.778% 100%);
+    }
+    .tick {
+      position: absolute;
+      top: -5px;
+      width: 2px;
+      height: 24px;
+      background: var(--ink);
+      transform: translateX(-1px);
+    }
+    .tick.hollow {
+      width: 10px;
+      height: 10px;
+      top: 2px;
+      background: transparent;
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      transform: translateX(-5px);
+    }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 14px;
+      list-style: none;
+      padding: 0;
+      margin: 12px 0 0;
+      font-size: 0.78rem;
+    }
+    .legend li { display: flex; gap: 6px; align-items: baseline; color: var(--muted); }
+    .legend i { width: 8px; height: 8px; flex: none; transform: translateY(1px); }
+    .legend .on { color: var(--ink); font-weight: 600; }
+    .warn { margin: 10px 0 0; color: #7c2d12; }
+    .action { border-top: 6px solid var(--band, var(--safe)); }
+    .action h2 { margin: 0; font-family: Fraunces, Georgia, serif; font-size: 1.8rem; letter-spacing: -0.03em; font-weight: 560; }
+    .action ol { margin: 12px 0 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .action li { display: grid; grid-template-columns: 7.6rem 1fr; gap: 8px; align-items: start; }
+    .tier {
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+      color: var(--muted);
+      padding-top: 3px;
+    }
+    .ref h2 { margin: 0 0 8px; font-family: Fraunces, Georgia, serif; font-size: 1.7rem; font-weight: 560; letter-spacing: -0.03em; }
+    .ref p, .fallback p { margin: 0 0 10px; }
+    .ref a, .fallback a { color: var(--ember); }
+    .fb-wrap {
+      max-width: 100%;
+      overflow-x: auto;
+      display: flex;
+      justify-content: center;
+      margin: 14px 0;
+      background: #f6f0e6;
+    }
+    .fallback {
+      background: #f7f1e6;
+      border: 1px solid var(--line);
+      padding: 12px 14px;
+    }
+    .fallback h3 { margin: 0 0 8px; font-size: 1rem; }
+    .fallback ul { margin: 0 0 10px; padding-left: 1.1rem; }
+    .fallback li { margin: 0 0 4px; }
+    .legal { margin: 18px 0 0; font-size: 0.8rem; }
+    .sr {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      border: 0;
+    }
+    @media (max-width: 860px) {
+      .layout { grid-template-columns: 1fr; }
+      .mast { flex-direction: column; align-items: flex-start; }
+      .file { text-align: left; }
+      .action li { grid-template-columns: 1fr; gap: 2px; }
+      .pair { grid-template-columns: 1fr; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      * { transition: none !important; }
+    }
+    @media print {
+      body { border: 0; background: white; }
+      .fb-wrap { display: none; }
+    }
+
+    /* h2c_Creates emerald & gold theme */
+    :root{--paper:#eef3ee;--ink:#0b2a22;--muted:#4f6a60;--line:#d6c58f;--card:#ffffff;--ember:#b8901f;--em:#0a5c45;--em2:#063d2f;--gold:#d4af37;--gold2:#f3dc8a}
+    body{background:radial-gradient(1200px 500px at 50% -120px,#0f7a5b22,transparent),linear-gradient(#f3f6f1,#e9efe7);border-top:6px solid transparent;border-image:linear-gradient(90deg,#b8901f,#f3dc8a,#b8901f) 1}
+    .wrap{padding-top:20px}
+    .brand{display:flex;align-items:center;gap:14px;background:linear-gradient(120deg,var(--em2),var(--em) 60%,#0d7355);color:#f8f1d4;border-radius:16px;padding:12px 18px;margin-bottom:18px;box-shadow:0 6px 20px #063d2f44;border:1px solid var(--gold)}
+    .brand img{width:56px;height:56px;border-radius:50%;border:2px solid var(--gold);background:#fff}
+    .brand b{font-family:Fraunces,Georgia,serif;font-size:1.35rem;letter-spacing:.02em;color:var(--gold2)}
+    .brand span{display:block;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;color:#d9e6dd}
+    .brand em{margin-left:auto;font-style:normal;font-size:.85rem;color:var(--gold2);text-align:right}
+    .mast{border-bottom:2px solid var(--gold);padding-bottom:20px;margin-bottom:24px}
+    h1{color:var(--em);background:linear-gradient(90deg,var(--em),#0d7355 55%,#b8901f);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .kicker,.eyebrow{color:var(--ember)}
+    .file strong{color:var(--em)}
+    .layout{gap:24px}
+    .sheet{border-radius:16px;border:1px solid #e6dcb4;box-shadow:0 8px 24px #0a5c4514;padding:24px;position:relative;overflow:hidden}
+    .sheet::before{content:"";position:absolute;left:0;right:0;top:0;height:4px;background:linear-gradient(90deg,#b8901f,#f3dc8a,#b8901f)}
+    .block+.block{margin-top:24px;padding-top:24px;border-top:1px dashed var(--line)}
+    .seg{background:#e8efe9;border-radius:12px;padding:4px}
+    .seg button{border-radius:9px}
+    .seg button[aria-pressed="true"]{background:linear-gradient(135deg,var(--em2),var(--em));color:var(--gold2);box-shadow:0 2px 8px #063d2f55}
+    .temp-row input,.rh-row input[type="text"]{color:var(--em);border-bottom:2px solid var(--gold)}
+    input[type="range"]{height:6px;border-radius:6px;background:linear-gradient(90deg,var(--gold) var(--fill,70%),#d9e3dc var(--fill,70%))}
+    input[type="range"]::-webkit-slider-thumb{width:24px;height:24px;background:linear-gradient(135deg,var(--em),var(--em2));border:3px solid var(--gold2);box-shadow:0 2px 8px #0006}
+    input[type="range"]::-moz-range-thumb{width:24px;height:24px;background:var(--em);border:3px solid var(--gold2)}
+    .hi{color:var(--em)}
+    .pair article{border-radius:12px;background:#f7faf6;border:1px solid #d9e3dc}
+    .pair article.on{border-color:var(--gold);background:#fffbea;box-shadow:0 0 0 2px #d4af3744}
+    .rule{height:16px;border-radius:10px;box-shadow:inset 0 1px 3px #0004}
+    .delta{border-left-color:var(--gold)}
+    .action{border-top:8px solid var(--band,var(--safe))}
+    .action h2,.ref h2{color:var(--em)}
+    .ref a,.fallback a{color:var(--em);font-weight:600}
+    .fallback{border-radius:12px;background:#f5f8f3}
+    .fb-wrap{border-radius:12px;background:#eef3ee}
+    .legal{text-align:center}
+    .foot{margin:26px 0 0;padding:16px;text-align:center;border-radius:14px;background:linear-gradient(120deg,var(--em2),var(--em));color:var(--gold2);border:1px solid var(--gold);font-size:.9rem;letter-spacing:.04em}
+    @media(max-width:860px){.brand em{display:none}.sheet{padding:18px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand"><img src="data:image/jpeg;base64,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" alt="h2c_Creates logo"><div><b>h2c_Creates</b><span>Build anything you dream</span></div><em>To GOD be the Glory!</em></div>
+    <header class="mast">
+      <div>
+        <p class="kicker">Workplace heat bulletin</p>
+        <h1>Heat Index</h1>
+        <p class="lede">How hot the body feels — the <em>damang-init</em> — from air temperature and relative humidity. Classed on the DOST-PAGASA scale, with employer controls drawn from DOLE Labor Advisory No. 08, series of 2023.</p>
+      </div>
+      <p class="file"><strong>LA 08-23</strong>Article 168 · OSHS Rule 1076</p>
+    </header>
+
+    <div class="layout">
+      <div>
+        <section class="sheet" aria-label="Calculator">
+          <div class="block">
+            <p class="eyebrow">01 — Conditions</p>
+            <div class="fields">
+              <div class="field">
+                <label for="temp">Ambient air temperature</label>
+                <div class="temp-row">
+                  <input id="temp" type="text" inputmode="decimal" autocomplete="off" spellcheck="false" value="32.0" aria-describedby="temp-hint" />
+                  <div class="seg" role="group" aria-label="Temperature unit">
+                    <button type="button" id="unit-c" aria-pressed="true">°C</button>
+                    <button type="button" id="unit-f" aria-pressed="false">°F</button>
+                  </div>
+                </div>
+                <p class="hint" id="temp-hint">10.0°C to 50.0°C. Default is a humid afternoon.</p>
+              </div>
+              <div class="field">
+                <div class="rh-head">
+                  <label for="rh">Relative humidity</label>
+                  <span id="rh-read">70%</span>
+                </div>
+                <div class="rh-row">
+                  <input id="rh" type="text" inputmode="numeric" autocomplete="off" value="70" aria-describedby="rh-hint" />
+                  <span class="hint" style="margin:0;align-self:flex-end;padding-bottom:8px">%</span>
+                </div>
+                <div class="slider">
+                  <input id="rh-slider" type="range" min="0" max="100" step="1" value="70" aria-label="Relative humidity percent" />
+                </div>
+                <p class="hint" id="rh-hint">0 to 100%. The slider and the number stay locked together.</p>
+              </div>
+              <div class="field">
+                <span id="expo-label" style="display:block;font-weight:600;margin-bottom:6px">Exposure</span>
+                <div class="seg" role="group" aria-labelledby="expo-label">
+                  <button type="button" id="expo-shade" aria-pressed="true">Shaded / indoor</button>
+                  <button type="button" id="expo-sun" aria-pressed="false">Direct sunlight</button>
+                </div>
+                <p class="hint">Shade uses the meteorological heat index. Direct sun adds the NWS / OSHA-NIOSH full-sun load of +15°F (+8.3°C) on top of that index.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="block">
+            <p class="eyebrow">02 — Heat index</p>
+            <p class="fine" id="basis" style="margin:0 0 8px"></p>
+            <div class="reading">
+              <div>
+                <p class="hi" id="hi-figure">40.4<small>°C</small></p>
+                <p class="band" id="band-line"><i class="swatch" id="swatch"></i><span id="band-name">Extreme Caution</span></p>
+              </div>
+              <p class="fine" id="hi-f" style="margin:0;text-align:right">104.7°F</p>
+            </div>
+            <p class="effect" id="effect"></p>
+            <div class="pair">
+              <article id="card-shade">
+                <h3>Meteorological</h3>
+                <p id="shade-val"></p>
+                <span>Shade / indoor · +0</span>
+              </article>
+              <article id="card-sun">
+                <h3>Solar-adjusted</h3>
+                <p id="sun-val"></p>
+                <span>Direct sun · +15°F / +8.3°C</span>
+              </article>
+            </div>
+            <p class="delta" id="delta" hidden></p>
+            <div class="rule" id="rule" aria-hidden="true">
+              <span class="tick" id="tick-on"></span>
+              <span class="tick hollow" id="tick-off"></span>
+            </div>
+            <ul class="legend" id="legend"></ul>
+            <p class="fine" id="method"></p>
+            <p class="warn" id="warn" hidden></p>
+            <p class="sr" id="live" aria-live="polite"></p>
+          </div>
+        </section>
+
+        <section class="sheet action" id="action" aria-labelledby="action-title" style="margin-top:18px">
+          <p class="eyebrow">03 — Occupational safety and health</p>
+          <h2 id="action-title">Action card</h2>
+          <p class="fine" id="action-basis"></p>
+          <p id="action-lead"></p>
+          <ol id="action-list"></ol>
+        </section>
+      </div>
+
+      <aside class="sheet ref" aria-labelledby="ref-title">
+        <p class="eyebrow">Regulatory reference</p>
+        <h2 id="ref-title">Labor Advisory No. 08-23</h2>
+        <p>DOLE issued <strong>Labor Advisory No. 08, series of 2023</strong>, “Safety and Health Measures to Prevent and Control Heat Stress at the Workplace,” pursuant to Article 168 of the Labor Code. It guides private-sector employers and workers, especially people working outdoors in extreme heat.</p>
+        <p>Public accounts of the advisory direct employers to cut heat and humidity with ventilation and heat insulation, adjust rest breaks or the place of work, allow temperature-appropriate uniforms and UV-protective gear, provide free drinking water (about 2 to 3 liters a day), agree flexible hours that keep the same total work time, and keep a way to handle heat emergencies. DOLE regional offices and the Occupational Safety and Health Center’s regional extension units give technical help.</p>
+        <p class="fine">The signed advisory is the controlling text. This page is an operational aid, not a reprint of it.</p>
+
+        <div class="fb-wrap">
+          <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Flaborandemploymentph%2Fposts%2Fpfbid02NLmvehNidL5XfnYQRL9ATLg6ByfUWt9Jni59soZqLLzyqMXfR4ywWysJpQH9jR8zl&show_text=true&width=500" width="500" height="728" style="border:none;overflow:hidden;max-width:100%;" scrolling="no" frameborder="0" allowfullscreen="true" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" title="DOLE Facebook post on heat stress at work"></iframe>
+        </div>
+
+        <div class="fallback">
+          <h3>If the post does not appear</h3>
+          <p>Google Sites and other embeds often block the Facebook plugin. The duties above still stand. Open the sources directly:</p>
+          <ul>
+            <li><a href="https://www.facebook.com/laborandemploymentph/posts/pfbid02NLmvehNidL5XfnYQRL9ATLg6ByfUWt9Jni59soZqLLzyqMXfR4ywWysJpQH9jR8zl">DOLE Facebook post</a> from laborandemploymentph</li>
+            <li><a href="https://dole.gov.ph/news/labor-advisory-08-23-safety-and-health-measures-to-prevent-and-control-heat-stress-at-the-workplace/">DOLE notice, Labor Advisory No. 08-23</a></li>
+            <li><a href="https://bwc.dole.gov.ph/addressing-heat-stress/">Bureau of Working Conditions — Addressing Heat Stress</a></li>
+            <li><a href="https://www.wpc.ncep.noaa.gov/html/heatindex_equation.shtml">NWS Rothfusz heat-index equation</a></li>
+            <li><a href="https://www.pagasa.dost.gov.ph/">DOST-PAGASA</a></li>
+          </ul>
+          <p>Bands used here are the PAGASA effect-based classes: below 27.0°C not in a heat band; 27.0–32.9°C Caution; 33.0–41.9°C Extreme Caution; 42.0–51.9°C Danger; 52.0°C and above Extreme Danger. The meteorological index is the chart value. The +15°F solar load is an exposure adjustment from NWS and OSHA-NIOSH heat-safety practice. It is not part of the PAGASA forecast equation, and it can put an unshaded job in a higher band than the shade reading.</p>
+        </div>
+        <p class="legal">Not a medical diagnosis and not a substitute for a safety officer, the OSH committee, or the text of the advisory. Ventilation items cite DOLE OSHS Rule 1076 as directed for this card.</p>
+    <p class="foot">h2c_Creates · To GOD be the Glory! · Build anything you dream · © 2026</p>
+      </aside>
+    </div>
+  </div>
+  <noscript><p style="padding:16px">This calculator needs JavaScript. The PAGASA bands and DOLE Labor Advisory No. 08-23 still apply: provide ventilation, water, rest, and stop non-critical outdoor work when the heat index is in Extreme Danger.</p></noscript>
+  <script>
+    (function () {
+      var SUN_F = 15;
+      var BANDS = [
+        { id: "normal", name: "Normal / Safe", range: "Below 27.0°C", effect: "Unlikely thermal stress under normal activity.", color: "#16a34a" },
+        { id: "caution", name: "Caution", range: "27.0°C to 32.9°C", effect: "Fatigue is possible with prolonged exposure and activity. Continuing activity could lead to heat cramps.", color: "#eab308" },
+        { id: "extreme", name: "Extreme Caution", range: "33.0°C to 41.9°C", effect: "Heat cramps and heat exhaustion are possible. Continuing activity could lead to heat stroke.", color: "#f97316" },
+        { id: "danger", name: "Danger", range: "42.0°C to 51.9°C", effect: "Heat cramps and heat exhaustion are likely; heat stroke is probable with continued activity.", color: "#ef4444" },
+        { id: "critical", name: "Extreme Danger", range: "52.0°C and above", effect: "Heat stroke is imminent.", color: "#991b1b" }
+      ];
+      var CONTROLS = [
+        { tier: "Caution", band: "caution", text: "Ensure adequate natural or mechanical ventilation (DOLE OSHS Rule 1076)." },
+        { tier: "Caution", band: "caution", text: "Provide free, accessible drinking water; encourage intake of at least 2 to 3 liters per day." },
+        { tier: "Caution", band: "caution", text: "Conduct information dissemination on heat stress symptoms." },
+        { tier: "Extreme Caution", band: "extreme", text: "Adjust rest breaks and rotate personnel to shaded or air-conditioned recovery areas." },
+        { tier: "Extreme Caution", band: "extreme", text: "Issue temperature-appropriate uniforms and UV-protective PPE: wide-brimmed hats, UV goggles, and breathable cotton or light-colored long sleeves." },
+        { tier: "Extreme Caution", band: "extreme", text: "Actively monitor workers with comorbidities (hypertension, cardiovascular conditions, kidney disease)." },
+        { tier: "Danger", band: "danger", text: "Enforce strict work-rest schedules and allow self-paced work." },
+        { tier: "Danger", band: "danger", text: "Reschedule high-metabolic or non-essential outdoor tasks to cooler hours (early morning or late afternoon)." },
+        { tier: "Danger", band: "danger", text: "Enforce a mandatory buddy system and ready first-aid and hydration stations." },
+        { tier: "Extreme Danger", band: "critical", text: "Immediately suspend non-critical outdoor or uncooled high-heat operations." },
+        { tier: "Extreme Danger", band: "critical", text: "Activate emergency heat-stroke response, rapid cooling protocols, and medical evacuation readiness." }
+      ];
+      var RANK = { normal: 0, caution: 1, extreme: 2, danger: 3, critical: 4 };
+
+      var state = { unit: "C", tempText: "32.0", rhText: "70", sun: false };
+      var tempEl = document.getElementById("temp");
+      var rhEl = document.getElementById("rh");
+      var slider = document.getElementById("rh-slider");
+      var liveTimer = 0;
+
+      function round1(n) { return Math.round(n * 10) / 10; }
+      function fmt(n) { return round1(n).toFixed(1); }
+      function cToF(c) { return (c * 9) / 5 + 32; }
+      function fToC(f) { return ((f - 32) * 5) / 9; }
+      function parseNum(raw) {
+        if (typeof raw !== "string") return NaN;
+        var s = raw.trim().replace(",", ".");
+        if (!s || s === "-" || s === "." || s === "-.") return NaN;
+        return Number(s);
+      }
+      function heatIndexF(tempF, rh) {
+        var simple = 0.5 * (tempF + 61.0 + (tempF - 68.0) * 1.2 + rh * 0.094);
+        if (simple < 80) return { hiF: simple, method: "Steadman approximation (first estimate under 80°F)" };
+        var T = tempF, R = rh;
+        var hi = -42.379 + 2.04901523 * T + 10.14333127 * R - 0.22475541 * T * R - 0.00683783 * T * T - 0.05481717 * R * R + 0.00122874 * T * T * R + 0.00085282 * T * R * R - 0.00000199 * T * T * R * R;
+        if (R < 13 && T >= 80 && T <= 112) {
+          hi -= ((13 - R) / 4) * Math.sqrt((17 - Math.abs(T - 95)) / 17);
+          return { hiF: hi, method: "Rothfusz regression, low-humidity adjustment" };
+        }
+        if (R > 85 && T >= 80 && T <= 87) {
+          hi += ((R - 85) / 10) * ((87 - T) / 5);
+          return { hiF: hi, method: "Rothfusz regression, high-humidity adjustment" };
+        }
+        return { hiF: hi, method: "Rothfusz regression" };
+      }
+      function bandForC(hiC) {
+        var c = round1(hiC);
+        if (c >= 52) return BANDS[4];
+        if (c >= 42) return BANDS[3];
+        if (c >= 33) return BANDS[2];
+        if (c >= 27) return BANDS[1];
+        return BANDS[0];
+      }
+      function scalePct(c) {
+        var stops = [[24, 0], [27, 8.333], [33, 25], [42, 50], [52, 77.778], [60, 100]];
+        var x = Math.min(60, Math.max(24, c));
+        for (var i = 1; i < stops.length; i++) {
+          if (x <= stops[i][0]) {
+            var u = (x - stops[i - 1][0]) / (stops[i][0] - stops[i - 1][0]);
+            return stops[i - 1][1] + u * (stops[i][1] - stops[i - 1][1]);
+          }
+        }
+        return 100;
+      }
+      function readTemp() {
+        var n = parseNum(state.tempText);
+        if (!isFinite(n)) return null;
+        var c = state.unit === "C" ? n : fToC(n);
+        return { c: c, out: c < 10 || c > 50 };
+      }
+      function readRh() {
+        var n = parseNum(state.rhText);
+        if (!isFinite(n)) return null;
+        if (n < 0 || n > 100) return { rh: Math.min(100, Math.max(0, n)), out: true };
+        return { rh: Math.round(n), out: false };
+      }
+
+      function paint() {
+        var temp = readTemp();
+        var rh = readRh();
+        var hint = document.getElementById("temp-hint");
+        slider.style.setProperty("--fill", (rh && !rh.out ? rh.rh : 0) + "%");
+        document.getElementById("rh-read").textContent = (rh && !rh.out ? rh.rh : "–") + "%";
+        if (rh && !rh.out) slider.value = String(rh.rh);
+        slider.setAttribute("aria-valuenow", slider.value);
+        slider.setAttribute("aria-valuetext", slider.value + " percent");
+
+        var figure = document.getElementById("hi-figure");
+        var warn = document.getElementById("warn");
+        var list = document.getElementById("action-list");
+        var action = document.getElementById("action");
+        if (!temp || !rh || temp.out || rh.out) {
+          figure.innerHTML = "–<small></small>";
+          document.getElementById("hi-f").textContent = "";
+          document.getElementById("band-name").textContent = "Waiting for a valid reading";
+          document.getElementById("swatch").style.background = "#d6d3d1";
+          document.getElementById("effect").textContent = "";
+          document.getElementById("shade-val").textContent = "–";
+          document.getElementById("sun-val").textContent = "–";
+          document.getElementById("card-shade").className = "";
+          document.getElementById("card-sun").className = "";
+          document.getElementById("basis").textContent = "";
+          document.getElementById("legend").replaceChildren();
+          document.getElementById("method").textContent = "";
+          document.getElementById("delta").hidden = true;
+          warn.hidden = false;
+          warn.textContent = "Enter air temperature from 10.0°C to 50.0°C (50.0°F to 122.0°F) and relative humidity from 0 to 100.";
+          hint.textContent = state.unit === "C" ? "Accepted range: 10.0°C to 50.0°C." : "Accepted range: 50.0°F to 122.0°F.";
+          action.style.setProperty("--band", "#d6d3d1");
+          document.getElementById("action-basis").textContent = "";
+          document.getElementById("action-lead").textContent = "The action card updates when both inputs are inside range.";
+          list.replaceChildren();
+          return;
+        }
+
+        var airF = cToF(temp.c);
+        var met = heatIndexF(airF, rh.rh);
+        var shadeC = fToC(met.hiF);
+        var sunC = fToC(met.hiF + SUN_F);
+        var shadeBand = bandForC(shadeC);
+        var sunBand = bandForC(sunC);
+        var activeC = state.sun ? sunC : shadeC;
+        var activeF = state.sun ? met.hiF + SUN_F : met.hiF;
+        var band = state.sun ? sunBand : shadeBand;
+        var other = state.sun ? shadeBand : sunBand;
+
+        figure.innerHTML = fmt(activeC) + "<small>°C</small>";
+        document.getElementById("hi-f").textContent = fmt(activeF) + "°F";
+        document.getElementById("basis").textContent = state.sun
+          ? "Classification basis · direct sunlight"
+          : "Classification basis · shaded / indoor";
+        document.getElementById("band-name").textContent = band.name;
+        document.getElementById("swatch").style.background = band.color;
+        document.getElementById("effect").textContent = band.effect;
+        document.getElementById("shade-val").textContent = fmt(shadeC) + "°C · " + fmt(met.hiF) + "°F";
+        document.getElementById("sun-val").textContent = fmt(sunC) + "°C · " + fmt(met.hiF + SUN_F) + "°F";
+        document.getElementById("card-shade").className = state.sun ? "" : "on";
+        document.getElementById("card-sun").className = state.sun ? "on" : "";
+        document.getElementById("tick-on").style.left = scalePct(round1(activeC)) + "%";
+        document.getElementById("tick-off").style.left = scalePct(round1(state.sun ? shadeC : sunC)) + "%";
+
+        var delta = document.getElementById("delta");
+        if (shadeBand.id !== sunBand.id) {
+          delta.hidden = false;
+          delta.textContent = "Shade is " + shadeBand.name + ". Direct sun is " + sunBand.name + ". The action card follows " + (state.sun ? "direct sunlight" : "shaded / indoor") + ".";
+        } else {
+          delta.hidden = true;
+        }
+
+        var legend = document.getElementById("legend");
+        legend.replaceChildren();
+        BANDS.forEach(function (b) {
+          var li = document.createElement("li");
+          if (b.id === band.id) li.className = "on";
+          var sw = document.createElement("i");
+          sw.style.background = b.color;
+          var name = document.createElement("b");
+          name.textContent = b.name;
+          var range = document.createElement("span");
+          range.textContent = b.range;
+          li.append(sw, name, range);
+          legend.append(li);
+        });
+
+        var beyond = airF > 112 || met.hiF > 160;
+        document.getElementById("method").textContent = met.method + ". PAGASA band uses the selected exposure, rounded to 0.1°C. Air " + fmt(temp.c) + "°C (" + fmt(airF) + "°F), RH " + rh.rh + "%.";
+        warn.hidden = !beyond;
+        warn.textContent = beyond ? "This sits outside the fitted window of the NWS regression (very hot air, or a result well above the printed chart). Use the band as a stop-work signal, not as a precise degree." : "";
+
+        hint.textContent = state.unit === "C"
+          ? "Equals " + fmt(airF) + "°F. Range 10.0°C to 50.0°C."
+          : "Equals " + fmt(temp.c) + "°C. Range 50.0°F to 122.0°F.";
+
+        action.style.setProperty("--band", band.color);
+        document.getElementById("action-basis").textContent = "DOLE Labor Advisory No. 08-23 · band follows the " + (state.sun ? "solar-adjusted" : "meteorological") + " heat index";
+        var lead = document.getElementById("action-lead");
+        list.replaceChildren();
+        if (band.id === "normal") {
+          lead.textContent = "This reading is below the PAGASA caution threshold, so the heat-stress tiers in this card are not triggered. Ordinary ventilation and drinking water remain good practice under OSHS Rule 1076. They are not, by themselves, an LA 08-23 emergency action.";
+        } else {
+          lead.textContent = "Employer controls in force at " + band.name + ". Everything from the lower bands stays in force. Added items are marked with their tier.";
+          CONTROLS.forEach(function (item) {
+            if (RANK[item.band] > RANK[band.id]) return;
+            var li = document.createElement("li");
+            var tag = document.createElement("span");
+            tag.className = "tier";
+            tag.textContent = item.tier;
+            var text = document.createElement("span");
+            text.textContent = item.text;
+            li.append(tag, text);
+            list.append(li);
+          });
+        }
+
+        window.clearTimeout(liveTimer);
+        liveTimer = window.setTimeout(function () {
+          var basis = state.sun ? "solar-adjusted" : "shaded";
+          document.getElementById("live").textContent =
+            basis + " heat index " + fmt(activeC) + " degrees Celsius, " + fmt(activeF) + " degrees Fahrenheit, " + band.name +
+            ". Shade " + fmt(shadeC) + ". Direct sun " + fmt(sunC) + ".";
+        }, 280);
+      }
+
+      tempEl.addEventListener("input", function () {
+        state.tempText = tempEl.value;
+        paint();
+      });
+      rhEl.addEventListener("input", function () {
+        state.rhText = rhEl.value;
+        paint();
+      });
+      slider.addEventListener("input", function () {
+        state.rhText = slider.value;
+        rhEl.value = slider.value;
+        paint();
+      });
+      tempEl.addEventListener("blur", function () {
+        var t = readTemp();
+        if (t && !t.out) {
+          var shown = state.unit === "C" ? t.c : cToF(t.c);
+          state.tempText = fmt(shown);
+          tempEl.value = state.tempText;
+          paint();
+        }
+      });
+      rhEl.addEventListener("blur", function () {
+        var r = readRh();
+        if (r && !r.out) {
+          state.rhText = String(r.rh);
+          rhEl.value = state.rhText;
+          paint();
+        }
+      });
+
+      function setUnit(unit) {
+        if (state.unit === unit) return;
+        var t = readTemp();
+        state.unit = unit;
+        document.getElementById("unit-c").setAttribute("aria-pressed", unit === "C" ? "true" : "false");
+        document.getElementById("unit-f").setAttribute("aria-pressed", unit === "F" ? "true" : "false");
+        if (t && isFinite(t.c)) {
+          state.tempText = fmt(unit === "C" ? t.c : cToF(t.c));
+          tempEl.value = state.tempText;
+        }
+        paint();
+      }
+      document.getElementById("unit-c").addEventListener("click", function () { setUnit("C"); });
+      document.getElementById("unit-f").addEventListener("click", function () { setUnit("F"); });
+
+      function setSun(sun) {
+        state.sun = sun;
+        document.getElementById("expo-shade").setAttribute("aria-pressed", sun ? "false" : "true");
+        document.getElementById("expo-sun").setAttribute("aria-pressed", sun ? "true" : "false");
+        paint();
+      }
+      document.getElementById("expo-shade").addEventListener("click", function () { setSun(false); });
+      document.getElementById("expo-sun").addEventListener("click", function () { setSun(true); });
+
+      paint();
+    })();
+  </script>
+</body>
+</html>
