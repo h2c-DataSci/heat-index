@@ -671,7 +671,7 @@
             tag.className = "tier";
             tag.textContent = item.tier; tag.style.color = TEXTCOL[item.band]; tag.style.fontWeight = "700";
             var text = document.createElement("span");
-            text.textContent = item.text;
+            text.textContent = item.text; text.style.color = TEXTCOL[item.band]; text.style.fontWeight = "500";
             li.append(tag, text);
             list.append(li);
           });
