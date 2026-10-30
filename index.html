@@ -329,6 +329,13 @@
     .legal{text-align:center}
     .foot{margin:26px 0 0;padding:16px;text-align:center;border-radius:14px;background:linear-gradient(120deg,var(--em2),var(--em));color:var(--gold2);border:1px solid var(--gold);font-size:.9rem;letter-spacing:.04em}
     @media(max-width:860px){.brand em{display:none}.sheet{padding:18px}}
+    /* wider 2nd column so the 500px Facebook embed fits fully */
+    .wrap{width:min(1280px,calc(100% - 32px))}
+    .layout{grid-template-columns:minmax(0,1fr) minmax(0,580px)}
+    .ref .sheet,.layout>div:last-child .sheet{padding:20px}
+    .fb-wrap{overflow:visible;padding:8px 0}
+    .fb-wrap iframe{display:block;width:100%!important;max-width:540px;margin:0 auto}
+    @media(max-width:1000px){.layout{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
