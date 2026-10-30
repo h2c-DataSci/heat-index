@@ -339,6 +339,8 @@
     /* center the Facebook embed */
     .fb-wrap{display:flex!important;justify-content:center!important}
     .fb-wrap iframe{width:500px!important;max-width:100%!important;margin:0 auto!important}
+    .bt{font-weight:700}
+    .band{font-weight:700}
   </style>
 </head>
 <body>
@@ -471,6 +473,8 @@
   <script>
     (function () {
       var SUN_F = 15;
+      var TEXTCOL = { normal: "#15803d", caution: "#b38600", extreme: "#ea580c", danger: "#dc2626", critical: "#7f1d1d" };
+      function bandSpan(b) { var e = document.createElement("strong"); e.className = "bt"; e.textContent = b.name; e.style.color = TEXTCOL[b.id]; return e; }
       var BANDS = [
         { id: "normal", name: "Normal / Safe", range: "Below 27.0°C", effect: "Unlikely thermal stress under normal activity.", color: "#16a34a" },
         { id: "caution", name: "Caution", range: "27.0°C to 32.9°C", effect: "Fatigue is possible with prolonged exposure and activity. Continuing activity could lead to heat cramps.", color: "#eab308" },
@@ -610,7 +614,7 @@
         document.getElementById("basis").textContent = state.sun
           ? "Classification basis · direct sunlight"
           : "Classification basis · shaded / indoor";
-        document.getElementById("band-name").textContent = band.name;
+        document.getElementById("band-name").textContent = band.name; document.getElementById("band-name").style.color = TEXTCOL[band.id];
         document.getElementById("swatch").style.background = band.color;
         document.getElementById("effect").textContent = band.effect;
         document.getElementById("shade-val").textContent = fmt(shadeC) + "°C · " + fmt(met.hiF) + "°F";
@@ -623,7 +627,7 @@
         var delta = document.getElementById("delta");
         if (shadeBand.id !== sunBand.id) {
           delta.hidden = false;
-          delta.textContent = "Shade is " + shadeBand.name + ". Direct sun is " + sunBand.name + ". The action card follows " + (state.sun ? "direct sunlight" : "shaded / indoor") + ".";
+          delta.replaceChildren("Shade is ", bandSpan(shadeBand), ". Direct sun is ", bandSpan(sunBand), ". The action card follows " + (state.sun ? "direct sunlight" : "shaded / indoor") + ".");
         } else {
           delta.hidden = true;
         }
@@ -636,7 +640,7 @@
           var sw = document.createElement("i");
           sw.style.background = b.color;
           var name = document.createElement("b");
-          name.textContent = b.name;
+          name.textContent = b.name; name.style.color = TEXTCOL[b.id];
           var range = document.createElement("span");
           range.textContent = b.range;
           li.append(sw, name, range);
@@ -659,13 +663,13 @@
         if (band.id === "normal") {
           lead.textContent = "This reading is below the PAGASA caution threshold, so the heat-stress tiers in this card are not triggered. Ordinary ventilation and drinking water remain good practice under OSHS Rule 1076. They are not, by themselves, an LA 08-23 emergency action.";
         } else {
-          lead.textContent = "Employer controls in force at " + band.name + ". Everything from the lower bands stays in force. Added items are marked with their tier.";
+          lead.replaceChildren("Employer controls in force at ", bandSpan(band), ". Everything from the lower bands stays in force. Added items are marked with their tier.");
           CONTROLS.forEach(function (item) {
             if (RANK[item.band] > RANK[band.id]) return;
             var li = document.createElement("li");
             var tag = document.createElement("span");
             tag.className = "tier";
-            tag.textContent = item.tier;
+            tag.textContent = item.tier; tag.style.color = TEXTCOL[item.band]; tag.style.fontWeight = "700";
             var text = document.createElement("span");
             text.textContent = item.text;
             li.append(tag, text);
