@@ -12,7 +12,7 @@ Update this file on every task. Keep it factual and dated.
 ## Current state (latest baseline)
 
 - Branch: `main`
-- Baseline tip: `2d06d85` — Record latest baseline in PROGRESS.md and README.md (baseline recorded from `7d3c36e`)
+- Baseline tip: `9ef7b0e` — Restore open items and set baseline tip in docs
 - Live: https://h2c-datasci.github.io/heat-index/ (GitHub Pages from `main` / root)
 - Offline under `/heat-index/` verified (service worker activates, shell cached, page and `app.js` render offline)
 - Formula, PAGASA bands, and developer link unchanged

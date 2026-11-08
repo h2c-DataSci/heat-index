@@ -59,7 +59,7 @@ Pull requests and pushes to `main` run **Validate HTML and JavaScript** (`.githu
 
 ## Baseline
 
-Latest baseline on `main`: `2d06d85` (2026-11-08). Recorded from `7d3c36e`.  
+Latest baseline on `main`: `9ef7b0e` (2026-11-08). Recorded from `7d3c36e`.  
 Offline under `/heat-index/` verified. Formula, PAGASA bands, and the developer link are unchanged.
 
 ## Hard rule
