@@ -12,7 +12,7 @@ Update this file on every task. Keep it factual and dated.
 ## Current state (latest baseline)
 
 - Branch: `main`
-- Baseline tip: `7d3c36e` — Set current state in PROGRESS.md to latest tip
+- Baseline tip: `2d06d85` — Record latest baseline in PROGRESS.md and README.md (baseline recorded from `7d3c36e`)
 - Live: https://h2c-datasci.github.io/heat-index/ (GitHub Pages from `main` / root)
 - Offline under `/heat-index/` verified (service worker activates, shell cached, page and `app.js` render offline)
 - Formula, PAGASA bands, and developer link unchanged
@@ -72,6 +72,8 @@ Update this file on every task. Keep it factual and dated.
 - Current state marked as the latest baseline.
 - Baseline tip at recording: `7d3c36e`.
 - Recorded in project memory and in this file and `README.md`.
+
+## Open items
 
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.
