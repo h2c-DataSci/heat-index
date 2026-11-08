@@ -1,6 +1,6 @@
-/* Offline app-shell cache. Bump CACHE_VERSION to invalidate. */
-const CACHE_VERSION = "heat-index-shell-v1";
-const SHELL = ["/", "/index.html", "/sw.js"];
+/* Offline app-shell cache under /heat-index/. Bump CACHE_VERSION to invalidate. */
+const CACHE_VERSION = "heat-index-shell-v2";
+const SHELL = ["./", "./index.html", "./app.js", "./sw.js"];
 
 self.addEventListener("install", function (event) {
   event.waitUntil(
@@ -16,7 +16,7 @@ self.addEventListener("activate", function (event) {
   event.waitUntil(
     caches.keys().then(function (keys) {
       return Promise.all(
-        keys.filter(function (key) { return key !== CACHE_VERSION; })
+        keys.filter(function (key) { return key.indexOf("heat-index-") === 0 && key !== CACHE_VERSION; })
             .map(function (key) { return caches.delete(key); })
       );
     }).then(function () {
