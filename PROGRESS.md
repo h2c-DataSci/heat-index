@@ -12,7 +12,7 @@ Update this file on every task. Keep it factual and dated.
 ## Current state
 
 - Branch: `main`
-- Latest commit: `0424bda` — Fix service worker path, CSP, and add Feedback link
+- Latest commit: `b0ed1e1` — Add PROGRESS.md and standard README.md
 - Live: https://h2c-datasci.github.io/heat-index/ (GitHub Pages from `main` / root)
 - Offline under `/heat-index/` verified (service worker activates, shell cached, page and `app.js` render offline)
 
@@ -63,6 +63,7 @@ Update this file on every task. Keep it factual and dated.
 - Replaced the stub `README.md` with standard project documentation.
 - Created this `PROGRESS.md`.
 - Hard rule recorded: update both files on every task going forward.
+- Committed and pushed as `b0ed1e1`.
 
 ## Open items
 
