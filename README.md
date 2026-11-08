@@ -57,6 +57,11 @@ The service worker registers relative to the page (`./sw.js`, scope `./`) and pr
 
 Pull requests and pushes to `main` run **Validate HTML and JavaScript** (`.github/workflows/validate-site.yml`). It is a smoke check (structure + `node --check`), not full HTML conformance or a security scan.
 
+## Baseline
+
+Latest baseline on `main`: `7d3c36e` (2026-11-08).  
+Offline under `/heat-index/` verified. Formula, PAGASA bands, and the developer link are unchanged.
+
 ## Hard rule
 
 `PROGRESS.md` and `README.md` are kept current on every task.  

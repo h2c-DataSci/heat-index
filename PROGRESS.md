@@ -9,12 +9,14 @@ Update this file on every task. Keep it factual and dated.
 - `README.md` — so context is preserved.
 - Both files are updated and kept current on every task for this project.
 
-## Current state
+## Current state (latest baseline)
 
 - Branch: `main`
-- Latest commit: `9185141` — Record documentation commit SHA in PROGRESS.md
+- Baseline tip: `7d3c36e` — Set current state in PROGRESS.md to latest tip
 - Live: https://h2c-datasci.github.io/heat-index/ (GitHub Pages from `main` / root)
 - Offline under `/heat-index/` verified (service worker activates, shell cached, page and `app.js` render offline)
+- Formula, PAGASA bands, and developer link unchanged
+- This state is the latest baseline as of 2026-11-08.
 
 ## Work log
 
@@ -65,7 +67,11 @@ Update this file on every task. Keep it factual and dated.
 - Hard rule recorded: update both files on every task going forward.
 - Committed and pushed as `b0ed1e1`.
 
-## Open items
+### 2026-11-08 — Baseline recorded
+
+- Current state marked as the latest baseline.
+- Baseline tip at recording: `7d3c36e`.
+- Recorded in project memory and in this file and `README.md`.
 
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.
