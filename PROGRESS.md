@@ -12,7 +12,7 @@ Update this file on every task. Keep it factual and dated.
 ## Current state
 
 - Branch: `main`
-- Latest commit: `b0ed1e1` — Add PROGRESS.md and standard README.md
+- Latest commit: `9185141` — Record documentation commit SHA in PROGRESS.md
 - Live: https://h2c-datasci.github.io/heat-index/ (GitHub Pages from `main` / root)
 - Offline under `/heat-index/` verified (service worker activates, shell cached, page and `app.js` render offline)
 
