@@ -1,5 +1,5 @@
 /* Offline app-shell cache under /heat-index/. Bump CACHE_VERSION to invalidate. */
-const CACHE_VERSION = "heat-index-shell-v4";
+const CACHE_VERSION = "heat-index-shell-v5";
 const SHELL = ["./", "./index.html", "./app.js", "./sw.js"];
 
 self.addEventListener("install", function (event) {

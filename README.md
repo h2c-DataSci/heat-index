@@ -28,7 +28,7 @@ The formula, the risk bands, and the existing “About the developer” link are
 Upper row: Calculator (left) and Action Card (right), equal width and same height.  
 Middle: DOST-PAGASA iHeatMAP embed (`https://iheatmap.pagasa.dost.gov.ph/`).  
 Below: full Regulatory reference (Labor Advisory No. 08-23).  
-Narrow screens stack the upper row.
+Narrow screens (under 720px) stack the upper row.
 
 ## Files
 

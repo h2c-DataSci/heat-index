@@ -95,7 +95,12 @@ Update this file on every task. Keep it factual and dated.
 - Equal columns (`1fr 1fr`) and stretch so both cards sit at the same level and match height.
 - Formula, bands, developer link, map, and regulatory reference unchanged.
 
-## Open items
+### 2026-11-09 — Fix side-by-side collapse
+
+- Live page was stacking Calculator and Action Card because a `max-width: 1180px` rule forced one column.
+- Stack breakpoint lowered to 720px so the two cards stay side by side on desktop and tablet.
+- Calculator remains left, Action Card right, equal columns, stretched to the same height.
+- Cache bumped to `heat-index-shell-v5`.
 
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.
