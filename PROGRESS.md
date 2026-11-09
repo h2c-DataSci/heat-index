@@ -95,5 +95,7 @@ Update this file on every task. Keep it factual and dated.
 - Equal columns (`1fr 1fr`) and stretch so both cards sit at the same level and match height.
 - Formula, bands, developer link, map, and regulatory reference unchanged.
 
+## Open items
+
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.
