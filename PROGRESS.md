@@ -89,7 +89,11 @@ Update this file on every task. Keep it factual and dated.
 - Calculator formula, bands, and developer link unchanged.
 - Verified load: defaults still `40.4°C` / Extreme Caution; map iframe present.
 
-## Open items
+### 2026-11-09 — Symmetric top row: Calculator left, Action Card right
+
+- Swapped top-row order: Calculator on the left, Action Card on the right.
+- Equal columns (`1fr 1fr`) and stretch so both cards sit at the same level and match height.
+- Formula, bands, developer link, map, and regulatory reference unchanged.
 
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.

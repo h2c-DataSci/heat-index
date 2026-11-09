@@ -76,10 +76,11 @@
     .file strong { display: block; color: var(--ink); letter-spacing: 0.08em; font-size: 0.95rem; }
     .top-row {
       display: grid;
-      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+      grid-template-columns: 1fr 1fr;
       gap: 18px;
-      align-items: start;
+      align-items: stretch;
     }
+    .top-row > .sheet { height: 100%; display: flex; flex-direction: column; }
     .map-panel { margin-top: 18px; }
     .map-frame {
       width: 100%;
@@ -342,7 +343,7 @@
     @media(max-width:860px){.brand em{display:none}.sheet{padding:18px}}
     /* wider 2nd column so the 500px Facebook embed fits fully */
     .wrap{width:min(1280px,calc(100% - 32px))}
-    .top-row{grid-template-columns:minmax(280px,0.9fr) minmax(0,1.1fr)}
+    .top-row{grid-template-columns:1fr 1fr}
     .ref .sheet,.layout>div:last-child .sheet{padding:20px}
     .fb-wrap{overflow:visible;padding:8px 0}
     .fb-wrap iframe{display:block;width:100%!important;max-width:540px;margin:0 auto}
@@ -368,14 +369,6 @@
     </header>
 
     <div class="top-row">
-      <section class="sheet action" id="action" aria-labelledby="action-title">
-          <p class="eyebrow">03 — Occupational safety and health</p>
-          <h2 id="action-title">Action card</h2>
-          <p class="fine" id="action-basis"></p>
-          <p id="action-lead"></p>
-          <ol id="action-list"></ol>
-        </section>
-      </div>
       <section class="sheet" aria-label="Calculator">
           <div class="block">
             <p class="eyebrow">01 — Conditions</p>
@@ -450,6 +443,15 @@
             <p class="sr" id="live" aria-live="polite"></p>
           </div>
         </section>
+    </div>
+      <section class="sheet action" id="action" aria-labelledby="action-title">
+          <p class="eyebrow">03 — Occupational safety and health</p>
+          <h2 id="action-title">Action card</h2>
+          <p class="fine" id="action-basis"></p>
+          <p id="action-lead"></p>
+          <ol id="action-list"></ol>
+        </section>
+      </div>
     </div>
 
     <section class="sheet map-panel" aria-label="Official PAGASA iHeatMAP">
