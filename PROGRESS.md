@@ -82,5 +82,14 @@ Update this file on every task. Keep it factual and dated.
 - Assessment: deep integration of the map is not practical (no public API, iframe/CSP limits, data quality caveats). Practical options are a deep link and, later, a station lookup if a stable public endpoint appears.
 - No app source changes in this task.
 
+### 2026-11-09 — Layout: Action Card left, Calculator right, iHeatMAP middle, reference below
+
+- Restructured `index.html`: `.top-row` has Action Card (left) and Calculator (right); iHeatMAP embed in the middle; full Regulatory reference below.
+- CSP `frame-src` now allows `https://iheatmap.pagasa.dost.gov.ph`.
+- Calculator formula, bands, and developer link unchanged.
+- Verified load: defaults still `40.4°C` / Extreme Caution; map iframe present.
+
+## Open items
+
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.

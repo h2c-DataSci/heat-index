@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; frame-src https://www.facebook.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none';" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data:; frame-src https://www.facebook.com https://iheatmap.pagasa.dost.gov.ph; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none';" />
   <title>Heat Index — PAGASA bands and DOLE workplace controls</title>
   <meta name="description" content="Heat index calculator for Philippine workplaces. Temperature and relative humidity, shade or direct sun, DOST-PAGASA classification, and DOLE Labor Advisory No. 08-23 controls." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -74,12 +74,21 @@
     .lede { margin: 0; max-width: 46rem; color: var(--muted); }
     .file { text-align: right; }
     .file strong { display: block; color: var(--ink); letter-spacing: 0.08em; font-size: 0.95rem; }
-    .layout {
+    .top-row {
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
       gap: 18px;
       align-items: start;
     }
+    .map-panel { margin-top: 18px; }
+    .map-frame {
+      width: 100%;
+      height: 640px;
+      border: 0;
+      border-radius: 12px;
+      background: #eef3ee;
+    }
+    .ref { margin-top: 18px; }
     .sheet {
       background: var(--card);
       border: 1px solid var(--line);
@@ -280,7 +289,7 @@
       border: 0;
     }
     @media (max-width: 860px) {
-      .layout { grid-template-columns: 1fr; }
+      .top-row { grid-template-columns: 1fr; }
       .mast { flex-direction: column; align-items: flex-start; }
       .file { text-align: left; }
       .action li { grid-template-columns: 1fr; gap: 2px; }
@@ -333,11 +342,11 @@
     @media(max-width:860px){.brand em{display:none}.sheet{padding:18px}}
     /* wider 2nd column so the 500px Facebook embed fits fully */
     .wrap{width:min(1280px,calc(100% - 32px))}
-    .layout{grid-template-columns:minmax(0,1fr) minmax(0,580px)}
+    .top-row{grid-template-columns:minmax(280px,0.9fr) minmax(0,1.1fr)}
     .ref .sheet,.layout>div:last-child .sheet{padding:20px}
     .fb-wrap{overflow:visible;padding:8px 0}
     .fb-wrap iframe{display:block;width:100%!important;max-width:540px;margin:0 auto}
-    @media(max-width:1180px){.layout{grid-template-columns:1fr}.fb-wrap iframe{max-width:560px}}
+    @media(max-width:1180px){.top-row{grid-template-columns:1fr}.fb-wrap iframe{max-width:560px}}
     /* center the Facebook embed */
     .fb-wrap{display:flex!important;justify-content:center!important}
     .fb-wrap iframe{width:500px!important;max-width:100%!important;margin:0 auto!important}
@@ -358,9 +367,16 @@
       <p class="file"><strong>LA 08-23</strong>Article 168 · OSHS Rule 1076</p>
     </header>
 
-    <div class="layout">
-      <div>
-        <section class="sheet" aria-label="Calculator">
+    <div class="top-row">
+      <section class="sheet action" id="action" aria-labelledby="action-title">
+          <p class="eyebrow">03 — Occupational safety and health</p>
+          <h2 id="action-title">Action card</h2>
+          <p class="fine" id="action-basis"></p>
+          <p id="action-lead"></p>
+          <ol id="action-list"></ol>
+        </section>
+      </div>
+      <section class="sheet" aria-label="Calculator">
           <div class="block">
             <p class="eyebrow">01 — Conditions</p>
             <div class="fields">
@@ -434,17 +450,16 @@
             <p class="sr" id="live" aria-live="polite"></p>
           </div>
         </section>
+    </div>
 
-        <section class="sheet action" id="action" aria-labelledby="action-title" style="margin-top:18px">
-          <p class="eyebrow">03 — Occupational safety and health</p>
-          <h2 id="action-title">Action card</h2>
-          <p class="fine" id="action-basis"></p>
-          <p id="action-lead"></p>
-          <ol id="action-list"></ol>
-        </section>
-      </div>
+    <section class="sheet map-panel" aria-label="Official PAGASA iHeatMAP">
+        <p class="eyebrow">Official guidance</p>
+        <h2>DOST-PAGASA iHeatMAP</h2>
+        <p class="fine">External forecast map from PAGASA. Guidance only — not a substitute for on-site temperature and humidity. Bands match the calculator.</p>
+        <iframe class="map-frame" src="https://iheatmap.pagasa.dost.gov.ph/" title="DOST-PAGASA iHeatMAP" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </section>
 
-      <aside class="sheet ref" aria-labelledby="ref-title">
+    <aside class="sheet ref" aria-labelledby="ref-title">
         <p class="eyebrow">Regulatory reference</p>
         <h2 id="ref-title">Labor Advisory No. 08-23</h2>
         <p>DOLE issued <strong>Labor Advisory No. 08, series of 2023</strong>, “Safety and Health Measures to Prevent and Control Heat Stress at the Workplace,” pursuant to Article 168 of the Labor Code. It guides private-sector employers and workers, especially people working outdoors in extreme heat.</p>
@@ -470,8 +485,7 @@
         <p class="legal">Not a medical diagnosis and not a substitute for a safety officer, the OSH committee, or the text of the advisory. Ventilation items cite DOLE OSHS Rule 1076 as directed for this card.</p>
     <p class="foot">h2c_Creates · To GOD be the Glory! · Build anything you dream · © 2026<br>Developed by Engr. Harold Henry G. Cabanilla · <a href="https://www.haroldhenrycabanilla.com" target="_blank" rel="noopener noreferrer" style="color:inherit;font-weight:700;text-decoration:underline">www.haroldhenrycabanilla.com</a> · <a href="https://docs.google.com/forms/d/e/1FAIpQLSedUpS-6ERmkio3noR_o1nS1UO0nf3sO48BH9t3AbLXvKv19w/viewform" target="_blank" rel="noopener noreferrer" style="color:inherit;font-weight:700;text-decoration:underline">Feedback</a></p>
       </aside>
-    </div>
-  </div>
+
   <noscript><p style="padding:16px">This calculator needs JavaScript. The PAGASA bands and DOLE Labor Advisory No. 08-23 still apply: provide ventilation, water, rest, and stop non-critical outdoor work when the heat index is in Extreme Danger.</p></noscript>
   <script src="./app.js" defer></script>
 </body>

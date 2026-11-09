@@ -25,6 +25,13 @@ The formula, the risk bands, and the existing “About the developer” link are
 
 ## Layout
 
+Upper row: Action Card (left) and Calculator (right).  
+Middle: DOST-PAGASA iHeatMAP embed (`https://iheatmap.pagasa.dost.gov.ph/`).  
+Below: full Regulatory reference (Labor Advisory No. 08-23).  
+Narrow screens stack the upper row.
+
+## Files
+
 | File | Role |
 |------|------|
 | `index.html` | App shell, styles, CSP, markup |
