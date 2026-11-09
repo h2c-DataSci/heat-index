@@ -102,7 +102,12 @@ Update this file on every task. Keep it factual and dated.
 - Calculator remains left, Action Card right, equal columns, stretched to the same height.
 - Cache bumped to `heat-index-shell-v5`.
 
-## Open items
+### 2026-11-09 — Real fix: Action Card was outside the grid
+
+- The earlier CSS change did not help because an extra `</div>` closed `.top-row` before the Action Card.
+- Action Card is now inside `.top-row`, after the Calculator.
+- Verified at 800px: both cards same top, equal width, Calculator left, Action Card right.
+- Cache bumped to `heat-index-shell-v6`.
 
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.
