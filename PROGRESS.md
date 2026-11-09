@@ -12,7 +12,8 @@ Update this file on every task. Keep it factual and dated.
 ## Current state (latest baseline)
 
 - Branch: `main`
-- Baseline tip: `9ef7b0e` — Restore open items and set baseline tip in docs
+- Baseline tip: `2e2a101` — Set baseline tip to current main (docs only; app unchanged)
+- Latest research: 2026-11-09 PAGASA heat-index page / map review (no code change)
 - Live: https://h2c-datasci.github.io/heat-index/ (GitHub Pages from `main` / root)
 - Offline under `/heat-index/` verified (service worker activates, shell cached, page and `app.js` render offline)
 - Formula, PAGASA bands, and developer link unchanged
@@ -73,7 +74,13 @@ Update this file on every task. Keep it factual and dated.
 - Baseline tip at recording: `7d3c36e`.
 - Recorded in project memory and in this file and `README.md`.
 
-## Open items
+### 2026-11-09 — PAGASA heat-index page review (map)
+
+- Ingested https://www.pagasa.dost.gov.ph/weather/heat-index.
+- Page embeds: iHeatMAP (`https://iheatmap.pagasa.dost.gov.ph/`) and AWS map (`https://www.panahon.gov.ph/heat_index.html`).
+- Synoptic table referenced but not present in the rendered page at review time.
+- Assessment: deep integration of the map is not practical (no public API, iframe/CSP limits, data quality caveats). Practical options are a deep link and, later, a station lookup if a stable public endpoint appears.
+- No app source changes in this task.
 
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.
