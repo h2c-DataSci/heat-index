@@ -102,5 +102,7 @@ Update this file on every task. Keep it factual and dated.
 - Calculator remains left, Action Card right, equal columns, stretched to the same height.
 - Cache bumped to `heat-index-shell-v5`.
 
+## Open items
+
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.
