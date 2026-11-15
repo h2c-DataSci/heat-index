@@ -119,5 +119,5 @@ Update this file on every task. Keep it factual and dated.
 
 ## Open items
 
-- Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
+- Branch protection applied on main (15 Nov 2026, Asia/Manila): pull request required (0 approvals), force-push and deletion blocked, enforce_admins off, no required status checks.
 - Dependabot PRs for Actions bumps exist; left untouched per instruction.
