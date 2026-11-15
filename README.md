@@ -26,7 +26,7 @@ The formula, the risk bands, and the existing “About the developer” link are
 ## Layout
 
 Upper row: Calculator (left) and Action Card (right), equal width and same height.  
-Middle: DOST-PAGASA iHeatMAP embed (`https://iheatmap.pagasa.dost.gov.ph/`).  
+Middle: DOST-PAGASA iHeatMAP, loaded only after the visitor clicks “Load DOST-PAGASA iHeatMAP”.  
 Below: full Regulatory reference (Labor Advisory No. 08-23).  
 Narrow screens (under 720px) stack the upper row.
 
@@ -56,9 +56,10 @@ The service worker registers relative to the page (`./sw.js`, scope `./`) and pr
 
 ## Security notes
 
-- Content-Security-Policy meta tag: `script-src 'self'` (no script `unsafe-inline`). Styles still allow `'unsafe-inline'` for existing inline styles and Google Fonts.
-- Service worker is least-privilege and offline-only for the app shell.
-- No secrets, no form posts from the page. Feedback opens an external Google Form in a new tab (`rel="noopener noreferrer"`).
+- Content-Security-Policy meta tag: `script-src 'self'` (no script `unsafe-inline`). Styles still allow `'unsafe-inline'` for existing inline styles and Google Fonts. `frame-src` allows `https://www.facebook.com` and `https://iheatmap.pagasa.dost.gov.ph` so the official embeds can run after a click.
+- The PAGASA map and the DOLE Facebook post are not loaded until the visitor asks for them. Created iframes use a tight `sandbox`, `referrerpolicy`, and `loading=lazy`.
+- Service worker is least-privilege and offline-only for the app shell (`heat-index-shell-v7`).
+- No secrets, no form posts from the page. Feedback opens an external Google Form in a new tab (`rel="noopener noreferrer"`). The About the developer link remains `https://www.haroldhenrycabanilla.com`.
 
 ## CI
 

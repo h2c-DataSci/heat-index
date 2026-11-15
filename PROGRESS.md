@@ -11,13 +11,10 @@ Update this file on every task. Keep it factual and dated.
 
 ## Current state (latest baseline)
 
-- Branch: `main`
-- Baseline tip: `2e2a101` — Set baseline tip to current main (docs only; app unchanged)
-- Latest research: 2026-11-09 PAGASA heat-index page / map review (no code change)
+- Branch: `security/click-to-load-embeds` (work in progress). Live `main` remains `d62f40f` until the pull request is merged.
 - Live: https://h2c-datasci.github.io/heat-index/ (GitHub Pages from `main` / root)
-- Offline under `/heat-index/` verified (service worker activates, shell cached, page and `app.js` render offline)
-- Formula, PAGASA bands, and developer link unchanged
-- This state is the latest baseline as of 2026-11-08.
+- Formula, PAGASA bands, and the About the developer / Feedback links are unchanged
+- Third-party embeds (PAGASA iHeatMAP and the DOLE Facebook post) load only after a click, with a tight sandbox, `referrerpolicy`, and `loading=lazy`. Shell cache is `heat-index-shell-v7`.
 
 ## Work log
 
@@ -116,6 +113,15 @@ Update this file on every task. Keep it factual and dated.
 - PR #2 (checkout 6.1.0 → 7.0.1): SHA pin only, CI success, merges cleanly, safe for this workflow.
 - PR #3 (setup-node 6.5.0 → 7.1.0): SHA pin only, CI success, merges cleanly, safe for this workflow.
 - No app source or appearance changes.
+
+### 2026-11-15 — Click-to-load third-party embeds
+
+- The PAGASA iHeatMAP and the DOLE Facebook post no longer load on every visit. Each has a placeholder and a button; the iframe is created only after a click.
+- Both frames set `sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"` (the minimum for those apps to run and open official links), `loading="lazy"`, and a referrer policy (`no-referrer` for PAGASA, `strict-origin-when-cross-origin` for the Facebook plugin).
+- The Facebook frame no longer requests autoplay, clipboard-write, encrypted-media, picture-in-picture, or web-share.
+- Calculator layout, formula, PAGASA bands, About the developer (`https://www.haroldhenrycabanilla.com`), and Feedback are unchanged.
+- `test/validate_site.py` now rejects eager third-party iframes, checks the new buttons and sandbox flags, and syntax-checks `app.js` and `sw.js`.
+- Service worker cache bumped to `heat-index-shell-v7`.
 
 ## Open items
 
