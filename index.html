@@ -96,6 +96,35 @@
       border-radius: 12px;
       background: #eef3ee;
     }
+    .embed-consent {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      text-align: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+    .embed-consent p { margin: 0; max-width: 36em; }
+    .embed-load {
+      border: 1px solid var(--gold);
+      background: linear-gradient(135deg,var(--em2),var(--em));
+      color: var(--gold2);
+      font-weight: 700;
+      min-height: 44px;
+      padding: 0 16px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #063d2f55;
+    }
+    .fb-wrap .embed-consent {
+      width: 500px;
+      max-width: 100%;
+      min-height: 220px;
+      height: auto;
+      border-radius: 12px;
+      background: #eef3ee;
+    }
     .ref { margin-top: 18px; }
     .sheet {
       background: var(--card);
@@ -463,7 +492,10 @@
         <p class="eyebrow">Official guidance</p>
         <h2>DOST-PAGASA iHeatMAP</h2>
         <p class="fine">External forecast map from PAGASA. Guidance only — not a substitute for on-site temperature and humidity. Bands match the calculator.</p>
-        <iframe class="map-frame" src="https://iheatmap.pagasa.dost.gov.ph/" title="DOST-PAGASA iHeatMAP" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <div class="map-frame embed-consent" data-embed="pagasa">
+          <p>The official PAGASA forecast map is loaded only when you ask for it. It is served by PAGASA and may use its own cookies.</p>
+          <button type="button" class="embed-load" data-embed-load="pagasa">Load DOST-PAGASA iHeatMAP</button>
+        </div>
       </section>
 
     <aside class="sheet ref" aria-labelledby="ref-title">
@@ -474,7 +506,10 @@
         <p class="fine">The signed advisory is the controlling text. This page is an operational aid, not a reprint of it.</p>
 
         <div class="fb-wrap">
-          <iframe src="https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Flaborandemploymentph%2Fposts%2Fpfbid02NLmvehNidL5XfnYQRL9ATLg6ByfUWt9Jni59soZqLLzyqMXfR4ywWysJpQH9jR8zl&show_text=true&width=500" width="500" height="728" style="border:none;overflow:hidden;max-width:100%;" scrolling="no" frameborder="0" allowfullscreen="true" loading="lazy" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" title="DOLE Facebook post on heat stress at work"></iframe>
+          <div class="embed-consent" data-embed="facebook">
+            <p>This official DOLE post is loaded only when you ask for it. Facebook may set cookies if you load it.</p>
+            <button type="button" class="embed-load" data-embed-load="facebook">Load DOLE Facebook post</button>
+          </div>
         </div>
 
         <div class="fallback">
@@ -493,7 +528,7 @@
     <p class="foot">h2c_Creates · To GOD be the Glory! · Build anything you dream · © 2026<br>Developed by Engr. Harold Henry G. Cabanilla · <a href="https://www.haroldhenrycabanilla.com" target="_blank" rel="noopener noreferrer" style="color:inherit;font-weight:700;text-decoration:underline">www.haroldhenrycabanilla.com</a> · <a href="https://docs.google.com/forms/d/e/1FAIpQLSedUpS-6ERmkio3noR_o1nS1UO0nf3sO48BH9t3AbLXvKv19w/viewform" target="_blank" rel="noopener noreferrer" style="color:inherit;font-weight:700;text-decoration:underline">Feedback</a></p>
       </aside>
 
-  <noscript><p style="padding:16px">This calculator needs JavaScript. The PAGASA bands and DOLE Labor Advisory No. 08-23 still apply: provide ventilation, water, rest, and stop non-critical outdoor work when the heat index is in Extreme Danger.</p></noscript>
+  <noscript><p style="padding:16px">This calculator needs JavaScript. The PAGASA bands and DOLE Labor Advisory No. 08-23 still apply: provide ventilation, water, rest, and stop non-critical outdoor work when the heat index is in Extreme Danger. Open the <a href="https://iheatmap.pagasa.dost.gov.ph/">DOST-PAGASA iHeatMAP</a> and the <a href="https://www.facebook.com/laborandemploymentph/posts/pfbid02NLmvehNidL5XfnYQRL9ATLg6ByfUWt9Jni59soZqLLzyqMXfR4ywWysJpQH9jR8zl">DOLE Facebook post</a> directly.</p></noscript>
   <script src="./app.js" defer></script>
 </body>
 </html>

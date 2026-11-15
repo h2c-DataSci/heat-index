@@ -269,6 +269,50 @@
       document.getElementById("expo-shade").addEventListener("click", function () { setSun(false); });
       document.getElementById("expo-sun").addEventListener("click", function () { setSun(true); });
 
+      var EMBEDS = {
+        pagasa: {
+          src: "https://iheatmap.pagasa.dost.gov.ph/",
+          title: "DOST-PAGASA iHeatMAP",
+          className: "map-frame",
+          sandbox: "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox",
+          referrerpolicy: "no-referrer"
+        },
+        facebook: {
+          src: "https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2Flaborandemploymentph%2Fposts%2Fpfbid02NLmvehNidL5XfnYQRL9ATLg6ByfUWt9Jni59soZqLLzyqMXfR4ywWysJpQH9jR8zl&show_text=true&width=500",
+          title: "DOLE Facebook post on heat stress at work",
+          width: "500",
+          height: "728",
+          style: "border:none;overflow:hidden;max-width:100%;",
+          sandbox: "allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox",
+          referrerpolicy: "strict-origin-when-cross-origin"
+        }
+      };
+
+      function loadEmbed(name, host) {
+        var spec = EMBEDS[name];
+        if (!spec || !host || host.getAttribute("data-loaded") === "true") return;
+        var frame = document.createElement("iframe");
+        frame.src = spec.src;
+        frame.title = spec.title;
+        frame.setAttribute("sandbox", spec.sandbox);
+        frame.setAttribute("referrerpolicy", spec.referrerpolicy);
+        frame.setAttribute("loading", "lazy");
+        if (spec.className) frame.className = spec.className;
+        if (spec.width) frame.width = spec.width;
+        if (spec.height) frame.height = spec.height;
+        if (spec.style) frame.setAttribute("style", spec.style);
+        host.setAttribute("data-loaded", "true");
+        host.replaceWith(frame);
+      }
+
+      document.querySelectorAll("[data-embed-load]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          var name = button.getAttribute("data-embed-load");
+          var host = button.closest("[data-embed]");
+          loadEmbed(name, host);
+        });
+      });
+
       paint();
 
       if ("serviceWorker" in navigator) {
