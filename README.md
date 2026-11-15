@@ -69,6 +69,11 @@ Pull requests and pushes to `main` run **Validate HTML and JavaScript** (`.githu
 Latest baseline on `main`: `9ef7b0e` (2026-11-08). Recorded from `7d3c36e`.  
 Offline under `/heat-index/` verified. Formula, PAGASA bands, and the developer link are unchanged.
 
+## Contribution
+
+Do not push directly to `main`. GitHub Pages deploys from `main`.  
+Put every change on a branch and open a pull request.
+
 ## Hard rule
 
 `PROGRESS.md` and `README.md` are kept current on every task.  

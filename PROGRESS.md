@@ -109,6 +109,14 @@ Update this file on every task. Keep it factual and dated.
 - Verified at 800px: both cards same top, equal width, Calculator left, Action Card right.
 - Cache bumped to `heat-index-shell-v6`.
 
+### 2026-11-15 — Branch-and-PR rule; Dependabot review
+
+- New hard rule: all changes go on a branch with a PR. Do not push directly to main, because GitHub Pages deploys from main.
+- Reviewed open Dependabot PRs #2 and #3. Neither merged.
+- PR #2 (checkout 6.1.0 → 7.0.1): SHA pin only, CI success, merges cleanly, safe for this workflow.
+- PR #3 (setup-node 6.5.0 → 7.1.0): SHA pin only, CI success, merges cleanly, safe for this workflow.
+- No app source or appearance changes.
+
 ## Open items
 
 - Branch protections (require PRs, conversation resolution, validation check; block force-push/deletion) proposed but not applied.
