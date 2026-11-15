@@ -1,0 +1,6 @@
+# Extends the default gitleaks rules shipped with v8.30.1.
+# No repo-specific allowlists: any finding should fail the scan.
+title = "gitleaks config"
+
+[extend]
+useDefault = true
