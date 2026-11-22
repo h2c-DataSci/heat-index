@@ -11,7 +11,7 @@ Update this file on every task. Keep it factual and dated.
 
 ## Current state (latest baseline)
 
-- Branch: `security/click-to-load-embeds` (work in progress). Live `main` remains `d62f40f` until the pull request is merged.
+- Branch: `docs/security-policy-and-gitignore` (open pull request). Live `main` is `9b438b9` until the pull request is merged.
 - Live: https://h2c-datasci.github.io/heat-index/ (GitHub Pages from `main` / root)
 - Formula, PAGASA bands, and the About the developer / Feedback links are unchanged
 - Third-party embeds (PAGASA iHeatMAP and the DOLE Facebook post) load only after a click, with a tight sandbox, `referrerpolicy`, and `loading=lazy`. Shell cache is `heat-index-shell-v7`.
@@ -122,6 +122,12 @@ Update this file on every task. Keep it factual and dated.
 - Calculator layout, formula, PAGASA bands, About the developer (`https://www.haroldhenrycabanilla.com`), and Feedback are unchanged.
 - `test/validate_site.py` now rejects eager third-party iframes, checks the new buttons and sandbox flags, and syntax-checks `app.js` and `sw.js`.
 - Service worker cache bumped to `heat-index-shell-v7`.
+
+### 2026-11-22 — Security policy and .gitignore
+
+- Added `SECURITY.md` directing vulnerability reports to GitHub private vulnerability reporting (Security tab → Report a vulnerability). No email address is listed.
+- Added `.gitignore` for `.env*` (with `!.env.example`), `*.pem`, `*.key`, `*.log`, `logs/`, `.cache/`, and `node_modules/`.
+- Calculator, formula, PAGASA bands, click-to-load embeds, About the developer, and Feedback are unchanged.
 
 ## Open items
 

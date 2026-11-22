@@ -1,0 +1,23 @@
+# Environment files
+.env*
+!.env.example
+
+# Secrets and keys
+*.pem
+*.key
+
+# Logs and caches
+*.log
+logs/
+.cache/
+
+# Dependencies
+node_modules/
+
+# System and editor files
+.DS_Store
+Thumbs.db
+*.swp
+*.tmp
+.vscode/
+.idea/
